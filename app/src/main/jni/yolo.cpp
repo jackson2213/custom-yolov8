@@ -225,7 +225,7 @@ Yolo::Yolo()
 }
 
 
-int Yolo::load(AAssetManager* mgr, const char* modeltype, int _target_size, const float* _mean_vals, const float* _norm_vals, bool use_gpu)
+int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, const float* _norm_vals, bool use_gpu)
 {
     yolo.clear();
     blob_pool_allocator.clear();
@@ -356,7 +356,7 @@ int Yolo::detect(const cv::Mat& rgb, std::vector<Object>& objects, float prob_th
 
 int Yolo::draw(cv::Mat& rgb, const std::vector<Object>& objects)
 {
-    static const char* class_names[] = {"shi", "gan", "other"};
+    static const char* class_names[] = {"shi", "hun", "other"};
 
     static const unsigned char colors[19][3] = {
         { 54,  67, 244},

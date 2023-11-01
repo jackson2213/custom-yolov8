@@ -39,3 +39,9 @@ https://github.com/nihui/opencv-mobile
 https://github.com/nihui/ncnn-android-nanodet  
 https://github.com/Tencent/ncnn  
 https://github.com/ultralytics/assets/releases/tag/v0.0.0
+
+##
+https://github.com/lamegaton/YOLOv8-Custom-Object-Detection-Android/tree/main
+https://medium.com/@gary.tsai.advantest/top-tutorials-for-deploying-custom-yolov8-on-android-%EF%B8%8F-dd6746afc1e6
+https://blog.csdn.net/LHYlhy0825/article/details/123060624
+

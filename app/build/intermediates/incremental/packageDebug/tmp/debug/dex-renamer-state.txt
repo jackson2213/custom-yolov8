@@ -1,4 +1,4 @@
-#Wed Nov 01 21:49:18 CST 2023
+#Thu Nov 02 00:19:02 CST 2023
 base.1=E\:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\classes.dex
 path.1=classes.dex
 base.0=E\:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex

@@ -181,16 +181,11 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIE
 
     __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "loadModel %p", mgr);
 
-    const char* modeltypes[] =
-    {
-        "n",
-        "s",
-    };
 
     const int target_sizes[] =
     {
-        320,
-        320,
+        416,
+        416,
     };
 
     const float mean_vals[][3] =
@@ -205,7 +200,6 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIE
         { 1 / 255.f, 1 / 255.f, 1 / 255.f },
     };
 
-    const char* modeltype = modeltypes[(int)modelid];
     int target_size = target_sizes[(int)modelid];
     bool use_gpu = (int)cpugpu == 1;
 
@@ -223,7 +217,7 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIE
         {
             if (!g_yolo)
                 g_yolo = new Yolo;
-            g_yolo->load(mgr, modeltype, target_size, mean_vals[(int)modelid], norm_vals[(int)modelid], use_gpu);
+            g_yolo->load(mgr, target_size, mean_vals[(int)modelid], norm_vals[(int)modelid], use_gpu);
         }
     }
 
