@@ -1,0 +1,43 @@
+{
+  "buildFiles": [
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\ncnn\\ncnn-release.cmake",
+    "E:\\AndroidSDK\\ndk\\21.4.7075529\\build\\cmake\\platforms.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\glslang\\glslang-config.cmake",
+    "E:\\AndroidSDK\\ndk\\21.4.7075529\\build\\cmake\\android.toolchain.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\glslang\\glslang-targets-release.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\ncnn\\ncnn.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\abi-arm64-v8a\\OpenCVConfig.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\CMakeLists.txt",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\OpenCVConfig.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\glslang\\glslang-targets.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\glslang\\glslang-config-version.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\OpenCVConfig-version.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\cmake\\ncnn\\ncnnConfig.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\abi-arm64-v8a\\OpenCVModules.cmake",
+    "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\abi-arm64-v8a\\OpenCVModules-release.cmake"
+  ],
+  "cleanCommands": [
+    "E:\\AndroidSDK\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\.cxx\\cmake\\debug\\arm64-v8a\" clean"
+  ],
+  "buildTargetsCommand": "E:\\AndroidSDK\\cmake\\3.10.2.4988404\\bin\\ninja.exe  -C \"E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\.cxx\\cmake\\debug\\arm64-v8a\" {LIST_OF_TARGETS_TO_BUILD}",
+  "libraries": {
+    "yolov8ncnn-Debug-arm64-v8a": {
+      "artifactName": "yolov8ncnn",
+      "buildCommand": "E:\\AndroidSDK\\cmake\\3.10.2.4988404\\bin\\ninja.exe -C \"E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\.cxx\\cmake\\debug\\arm64-v8a\" yolov8ncnn",
+      "abi": "arm64-v8a",
+      "output": "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\build\\intermediates\\cmake\\debug\\obj\\arm64-v8a\\libyolov8ncnn.so",
+      "runtimeFiles": [
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libncnn.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\staticlibs\\arm64-v8a\\libopencv_core.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\staticlibs\\arm64-v8a\\libopencv_imgproc.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libglslang.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libSPIRV.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libMachineIndependent.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libOGLCompiler.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libOSDependent.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\arm64-v8a\\lib\\libGenericCodeGen.a",
+        "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\staticlibs\\arm64-v8a\\libopencv_core.a"
+      ]
+    }
+  }
+}

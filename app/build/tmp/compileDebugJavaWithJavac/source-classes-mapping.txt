@@ -1,0 +1,9 @@
+com/tencent/yolov8ncnn/MainActivity.java
+ com.tencent.yolov8ncnn.MainActivity
+ com.tencent.yolov8ncnn.MainActivity$1
+ com.tencent.yolov8ncnn.MainActivity$2
+ com.tencent.yolov8ncnn.MainActivity$3
+com/tencent/yolov8ncnn/Yolov8Ncnn.java
+ com.tencent.yolov8ncnn.Yolov8Ncnn
+com/tencent/yolov8ncnn/BuildConfig.java
+ com.tencent.yolov8ncnn.BuildConfig
