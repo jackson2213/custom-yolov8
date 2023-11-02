@@ -73,31 +73,20 @@ JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
 }
 
 // public native boolean loadModel(AssetManager mgr, int modelid, int cpugpu);
-JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIEnv* env, jobject thiz, jobject assetManager, jint cpugpu)
+JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIEnv* env, jobject thiz, jobject assetManager)
 {
 
     AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
     __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "loadModel %p", mgr);
     const float mean_vals[3] ={103.53f, 116.28f, 123.675f};
     const float norm_vals[3] ={ 1 / 255.f, 1 / 255.f, 1 / 255.f };
-    int target_size = img_input_size;
-    bool use_gpu = (int)cpugpu == 1;
     // reload
     {
         ncnn::MutexLockGuard g(lock);
 
-        if (use_gpu && ncnn::get_gpu_count() == 0)
-        {
-            // no gpu
-            delete g_yolo;
-            g_yolo = 0;
-        }
-        else
-        {
-            if (!g_yolo)
-                g_yolo = new Yolo;
-            g_yolo->load(mgr, target_size, mean_vals, norm_vals, use_gpu);
-        }
+        if (!g_yolo)
+           g_yolo = new Yolo;
+        g_yolo->load(mgr, img_input_size, mean_vals, norm_vals);
     }
     // init jni glue
         jclass localObjCls = env->FindClass("com/megvii/yoloXncnn/YOLOXncnn$Obj");
@@ -116,14 +105,14 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIE
 }
 
 
-JNIEXPORT jobjectArray JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_Detect(JNIEnv* env, jobject thiz, jobject bitmap,float prob_threshold, float nms_threshold){
+JNIEXPORT jobjectArray JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_Detect(JNIEnv* env, jobject thiz, jobject bitmap,jboolean use_gpu,float prob_threshold, float nms_threshold){
     jobjectArray jObjArray = env->NewObjectArray(objects.size(), objCls, NULL);
 
    if (g_yolo)
     {
        double start_time = ncnn::get_current_time();
        std::vector<Object> objects;
-       g_yolo->detect(bitmap, objects,prob_threshold,nms_threshold);
+       g_yolo->detect(bitmap, objects, use_gpu, prob_threshold,nms_threshold);
        jobjectArray jObjArray = env->NewObjectArray(objects.size(), objCls, NULL);
 
        for (size_t i=0; i<objects.size(); i++)

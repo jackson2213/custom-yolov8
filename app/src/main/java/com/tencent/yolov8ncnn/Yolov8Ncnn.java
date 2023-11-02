@@ -28,8 +28,8 @@ public class Yolov8Ncnn
         public String label;
         public float prob;
     }
-    public native boolean loadModel(AssetManager mgr, int cpugpu);
-    public native Obj[] Detect(Bitmap bitmap,float prob_threshold, float nms_threshold);
+    public native boolean loadModel(AssetManager mgr);
+    public native Obj[] Detect(Bitmap bitmap,boolean use_gpu, float prob_threshold, float nms_threshold);
 
     static {
         System.loadLibrary("yolov8ncnn");

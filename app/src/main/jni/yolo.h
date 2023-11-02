@@ -36,9 +36,9 @@ class Yolo
 public:
     Yolo();
 
-    int load( AAssetManager* mgr, int target_size, const float* mean_vals, const float* norm_vals, bool use_gpu = false);
+    int load( AAssetManager* mgr, int target_size, const float* mean_vals, const float* norm_vals);
 
-    int detect(const cv::Mat& rgb, std::vector<Object>& objects, float prob_threshold = 0.8f, float nms_threshold = 0.8f);
+    int detect(const cv::Mat& rgb, std::vector<Object>& objects, bool use_gpu,float prob_threshold = 0.8f, float nms_threshold = 0.8f);
 
 
 private:

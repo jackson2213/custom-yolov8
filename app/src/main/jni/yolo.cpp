@@ -225,7 +225,7 @@ Yolo::Yolo()
 }
 
 
-int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, const float* _norm_vals, bool use_gpu)
+int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, const float* _norm_vals)
 {
     yolo.clear();
     blob_pool_allocator.clear();
@@ -236,9 +236,8 @@ int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, co
 
     yolo.opt = ncnn::Option();
 
-#if NCNN_VULKAN
-    yolo.opt.use_vulkan_compute = use_gpu;
-#endif
+    if (ncnn::get_gpu_count() != 0)
+       yolo.opt.use_vulkan_compute = true;
 
     yolo.opt.num_threads = ncnn::get_big_cpu_count();
     yolo.opt.blob_allocator = &blob_pool_allocator;
@@ -263,8 +262,13 @@ int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, co
     return 0;
 }
 
-int Yolo::detect(jobject bitmap, std::vector<Object>& objects, float prob_threshold, float nms_threshold)
+int Yolo::detect(jobject bitmap, std::vector<Object>& objects, bool use_gpu, float prob_threshold, float nms_threshold)
 {
+    if (use_gpu == JNI_TRUE && ncnn::get_gpu_count() == 0)
+        {
+            return NULL;
+            //return env->NewStringUTF("no vulkan capable gpu");
+        }
     AndroidBitmapInfo info;
     AndroidBitmap_getInfo(env, bitmap, &info);
     const int width = info.width;
@@ -299,7 +303,7 @@ int Yolo::detect(jobject bitmap, std::vector<Object>& objects, float prob_thresh
     in_pad.substract_mean_normalize(0, norm_vals);
 
     ncnn::Extractor ex = yolo.create_extractor();
-
+    ex.set_vulkan_compute(use_gpu);
     ex.input("images", in_pad);
 
     std::vector<Object> proposals;
