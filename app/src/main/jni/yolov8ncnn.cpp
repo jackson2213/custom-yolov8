@@ -28,7 +28,6 @@
 
 #include "yolo.h"
 
-#include "ndkcamera.h"
 
 #include <opencv2/core/core.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
@@ -39,7 +38,7 @@
 
 extern "C" {
 // FIXME DeleteGlobalRef is missing for objCls
-static Yolo* g_yolo = 0;
+static Yolo *g_yolo = 0;
 static ncnn::Mutex lock;
 static jclass objCls = NULL;
 static jmethodID constructortorId;
@@ -49,21 +48,19 @@ static jfieldID wId;
 static jfieldID hId;
 static jfieldID labelId;
 static jfieldID probId;
-static const char* class_names[] = {"shi", "hun", "other"};
+static const char *class_names[] = {"shi", "hun", "other"};
 static int num_class = 3;
 static int img_input_size = 416;
 
-JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
-{
+JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "JNI_OnLoad");
     ncnn::create_gpu_instance();
     if (!g_yolo)
-         g_yolo = new Yolo;
+        g_yolo = new Yolo;
     return JNI_VERSION_1_4;
 }
 
-JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
-{
+JNIEXPORT void JNI_OnUnload(JavaVM *vm, void *reserved) {
     __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "JNI_OnUnload");
     {
         ncnn::MutexLockGuard g(lock);
@@ -74,69 +71,70 @@ JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
 }
 
 // public native boolean loadModel(AssetManager mgr, int modelid, int cpugpu);
-JNIEXPORT jboolean JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_loadModel(JNIEnv* env, jobject thiz, jobject assetManager)
-{
+JNIEXPORT jboolean JNICALL
+Java_com_tencent_yolov8ncnn_Yolov8Ncnn_Init(JNIEnv *env, jobject thiz, jobject assetManager) {
 
-    AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
+    AAssetManager *mgr = AAssetManager_fromJava(env, assetManager);
     __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "loadModel %p", mgr);
-    const float mean_vals[3] ={103.53f, 116.28f, 123.675f};
-    const float norm_vals[3] ={ 1 / 255.f, 1 / 255.f, 1 / 255.f };
+    const float mean_vals[3] = {103.53f, 116.28f, 123.675f};
+    const float norm_vals[3] = {1 / 255.f, 1 / 255.f, 1 / 255.f};
     // reload
     {
         ncnn::MutexLockGuard g(lock);
 
         if (!g_yolo)
-           g_yolo = new Yolo;
+            g_yolo = new Yolo;
         g_yolo->load(mgr, img_input_size, mean_vals, norm_vals);
     }
     // init jni glue
-        jclass localObjCls = env->FindClass("com/megvii/yoloXncnn/YOLOXncnn$Obj");
-        objCls = reinterpret_cast<jclass>(env->NewGlobalRef(localObjCls));
+    jclass localObjCls = env->FindClass("com/tencent/yolov8ncnn/Yolov8Ncnn$Obj");
+    objCls = reinterpret_cast<jclass>(env->NewGlobalRef(localObjCls));
 
-        constructortorId = env->GetMethodID(objCls, "<init>", "(Lcom/megvii/yoloXncnn/YOLOXncnn;)V");
+    constructortorId = env->GetMethodID(objCls, "<init>", "(Lcom/tencent/yolov8ncnn/Yolov8Ncnn;)V");
 
-        xId = env->GetFieldID(objCls, "x", "F");
-        yId = env->GetFieldID(objCls, "y", "F");
-        wId = env->GetFieldID(objCls, "w", "F");
-        hId = env->GetFieldID(objCls, "h", "F");
-        labelId = env->GetFieldID(objCls, "label", "Ljava/lang/String;");
-        probId = env->GetFieldID(objCls, "prob", "F");
+    xId = env->GetFieldID(objCls, "x", "F");
+    yId = env->GetFieldID(objCls, "y", "F");
+    wId = env->GetFieldID(objCls, "w", "F");
+    hId = env->GetFieldID(objCls, "h", "F");
+    labelId = env->GetFieldID(objCls, "label", "Ljava/lang/String;");
+    probId = env->GetFieldID(objCls, "prob", "F");
 
     return JNI_TRUE;
 }
 
 
-JNIEXPORT jobjectArray JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_Detect(JNIEnv* env, jobject thiz, jobject bitmap,jboolean use_gpu,float prob_threshold, float nms_threshold){
-    jobjectArray jObjArray = env->NewObjectArray(objects.size(), objCls, NULL);
+JNIEXPORT jobjectArray JNICALL
+Java_com_tencent_yolov8ncnn_Yolov8Ncnn_Detect(JNIEnv *env, jobject thiz, jobject bitmap,
+                                              jboolean use_gpu, float prob_threshold,
+                                              float nms_threshold) {
+    jobjectArray jObjArray = nullptr;
+    if (g_yolo) {
+        double start_time = ncnn::get_current_time();
+        std::vector<Object> objects;
+        g_yolo->detect(env, bitmap, objects, use_gpu, prob_threshold, nms_threshold, num_class);
+        jObjArray = env->NewObjectArray(objects.size(), objCls, NULL);
 
-   if (g_yolo)
-    {
-       double start_time = ncnn::get_current_time();
-       std::vector<Object> objects;
-       g_yolo->detect(bitmap, objects, use_gpu, prob_threshold,nms_threshold, num_class);
-       jobjectArray jObjArray = env->NewObjectArray(objects.size(), objCls, NULL);
+        for (size_t i = 0; i < objects.size(); i++) {
+            jobject jObj = env->NewObject(objCls, constructortorId, thiz);
 
-       for (size_t i=0; i<objects.size(); i++)
-       {
-          jobject jObj = env->NewObject(objCls, constructortorId, thiz);
+            env->SetFloatField(jObj, xId, objects[i].rect.x);
+            env->SetFloatField(jObj, yId, objects[i].rect.y);
+            env->SetFloatField(jObj, wId, objects[i].rect.width);
+            env->SetFloatField(jObj, hId, objects[i].rect.height);
+            env->SetObjectField(jObj, labelId, env->NewStringUTF(class_names[objects[i].label]));
+            env->SetFloatField(jObj, probId, objects[i].prob);
 
-          env->SetFloatField(jObj, xId, objects[i].rect.x);
-          env->SetFloatField(jObj, yId, objects[i].rect.y);
-          env->SetFloatField(jObj, wId, objects[i].rect.width);
-          env->SetFloatField(jObj, hId, .rect.height);
-          env->SetObjectField(jObj, labelId, env->NewStringUTF(class_names[objects[i].label]));
-          env->SetFloatField(jObj, probId, objects[i].prob);
+            env->SetObjectArrayElement(jObjArray, i, jObj);
 
-          env->SetObjectArrayElement(jObjArray, i, jObj);
-
-          double elasped = ncnn::get_current_time() - start_time;
-          __android_log_print(ANDROID_LOG_DEBUG, "YOLOXncnn", "%.2fms   detect", elasped);
-    }else{
-          __android_log_print(ANDROID_LOG_DEBUG, "Yolov8Ncnn", "Detect load model failed");
+            double elasped = ncnn::get_current_time() - start_time;
+            __android_log_print(ANDROID_LOG_DEBUG, "YOLOXncnn", "%.2fms   detect", elasped);
+        }
+    } else {
+        __android_log_print(ANDROID_LOG_DEBUG, "Yolov8Ncnn", "Detect load model failed");
     }
     return jObjArray;
-   }
+}
+
 }
 
 
-}

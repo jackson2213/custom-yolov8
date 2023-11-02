@@ -1,15 +1,15 @@
 {
   "buildFiles": [
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\x86_64\\lib\\cmake\\glslang\\glslang-targets-release.cmake",
-    "E:\\AndroidSDK\\ndk\\21.0.6113669\\build\\cmake\\platforms.cmake",
+    "E:\\AndroidSDK\\ndk\\21.4.7075529\\build\\cmake\\platforms.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\abi-x86_64\\OpenCVModules.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\x86_64\\lib\\cmake\\ncnn\\ncnn-release.cmake",
+    "E:\\AndroidSDK\\ndk\\21.4.7075529\\build\\cmake\\android.toolchain.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\abi-x86_64\\OpenCVConfig.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\CMakeLists.txt",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\OpenCVConfig.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\x86_64\\lib\\cmake\\glslang\\glslang-config.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\x86_64\\lib\\cmake\\ncnn\\ncnn.cmake",
-    "E:\\AndroidSDK\\ndk\\21.0.6113669\\build\\cmake\\android.toolchain.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\abi-x86_64\\OpenCVModules-release.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\opencv-mobile-4.8.1-android\\sdk\\native\\jni\\OpenCVConfig-version.cmake",
     "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ncnn-20231027-android-vulkan\\x86_64\\lib\\cmake\\ncnn\\ncnnConfig.cmake",

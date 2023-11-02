@@ -16,8 +16,17 @@ package com.tencent.yolov8ncnn;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.PixelFormat;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Surface;
@@ -27,16 +36,20 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public class MainActivity extends Activity
 {
     private static final int SELECT_IMAGE = 1;
-    private float prob_threshold=0.85;
-    private float nms_threshold=0.85;
+    private float prob_threshold= 0.7F;
+    private float nms_threshold= 0.7F;
     private ImageView imageView;
     private Bitmap bitmap = null;
     private Bitmap yourSelectedImage = null;
@@ -91,14 +104,14 @@ public class MainActivity extends Activity
 
     private void reload()
     {
-        boolean ret_init = yolov8ncnn.loadModel(getAssets(), current_cpugpu);
+        boolean ret_init = yolov8ncnn.Init(getAssets());
         if (!ret_init)
         {
             Log.e("MainActivity", "yolov8ncnn loadModel failed");
         }
     }
 
-    private void showObjects(YOLOXncnn.Obj[] objects)
+    private void showObjects(Yolov8Ncnn.Obj[] objects)
     {
         if (objects == null)
         {
@@ -256,20 +269,6 @@ public class MainActivity extends Activity
         return Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
     }
 
-
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-
-        if (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_DENIED)
-        {
-            ActivityCompat.requestPermissions(this, new String[] {Manifest.permission.CAMERA}, REQUEST_CAMERA);
-        }
-
-
-    }
 
     @Override
     public void onPause()

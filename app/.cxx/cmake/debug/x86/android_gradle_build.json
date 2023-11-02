@@ -41,11 +41,6 @@
           "src": "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\yolo.cpp",
           "flagsOrdinal": 1,
           "workingDirectoryOrdinal": 0
-        },
-        {
-          "src": "E:\\download\\ncnn-android-yolov8-main\\ncnn-android-yolov8\\app\\src\\main\\jni\\ndkcamera.cpp",
-          "flagsOrdinal": 1,
-          "workingDirectoryOrdinal": 0
         }
       ],
       "headers": [],

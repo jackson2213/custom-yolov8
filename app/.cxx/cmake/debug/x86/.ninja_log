@@ -1,0 +1,17 @@
+# ninja log v5
+0	14	0	clean	3ae3f5da55db15c4
+0	13	0	clean	3ae3f5da55db15c4
+1	15	0	clean	3ae3f5da55db15c4
+1	286	720629959	build.ninja	21f9a44e037c4140
+0	13	0	clean	3ae3f5da55db15c4
+0	13	0	clean	3ae3f5da55db15c4
+1	15	0	clean	3ae3f5da55db15c4
+1	252	720630047	build.ninja	21f9a44e037c4140
+1	755	720630047	CMakeFiles/yolov8ncnn.dir/yolov8ncnn.cpp.o	cd49c6f5d1890d49
+8	862	720630047	CMakeFiles/yolov8ncnn.dir/yolo.cpp.o	44957d3c6fb1424a
+863	1314	720630048	E:/download/ncnn-android-yolov8-main/ncnn-android-yolov8/app/build/intermediates/cmake/debug/obj/x86/libyolov8ncnn.so	7bbbee9b97862b75
+1	15	0	clean	3ae3f5da55db15c4
+0	14	0	clean	3ae3f5da55db15c4
+3	785	720630720	CMakeFiles/yolov8ncnn.dir/yolov8ncnn.cpp.o	cd49c6f5d1890d49
+11	912	720630720	CMakeFiles/yolov8ncnn.dir/yolo.cpp.o	44957d3c6fb1424a
+912	1210	720630721	E:/download/ncnn-android-yolov8-main/ncnn-android-yolov8/app/build/intermediates/cmake/debug/obj/x86/libyolov8ncnn.so	7bbbee9b97862b75

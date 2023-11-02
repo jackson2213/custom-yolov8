@@ -224,7 +224,7 @@ Yolo::Yolo()
 }
 
 
-int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, const float* _norm_vals)
+bool Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, const float* _norm_vals)
 {
     yolo.clear();
     blob_pool_allocator.clear();
@@ -261,7 +261,7 @@ int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, co
     return 0;
 }
 
-int Yolo::detect(jobject bitmap, std::vector<Object>& objects, bool use_gpu, float prob_threshold, float nms_threshold, int num_class)
+int Yolo::detect(JNIEnv* env,jobject bitmap, std::vector<Object>& objects, bool use_gpu, float prob_threshold, float nms_threshold, int num_class)
 {
     if (use_gpu == JNI_TRUE && ncnn::get_gpu_count() == 0)
         {
