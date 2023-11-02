@@ -137,10 +137,9 @@ static void generate_grids_and_stride(const int target_w, const int target_h, st
         }
     }
 }
-static void generate_proposals(std::vector<GridAndStride> grid_strides, const ncnn::Mat& pred, float prob_threshold, std::vector<Object>& objects)
+static void generate_proposals(std::vector<GridAndStride> grid_strides, const ncnn::Mat& pred, float prob_threshold, std::vector<Object>& objects, int num_class)
 {
     const int num_points = grid_strides.size();
-    const int num_class = 3;
     const int reg_max_1 = 16;
 
     for (int i = 0; i < num_points; i++)
@@ -262,7 +261,7 @@ int Yolo::load(AAssetManager* mgr, int _target_size, const float* _mean_vals, co
     return 0;
 }
 
-int Yolo::detect(jobject bitmap, std::vector<Object>& objects, bool use_gpu, float prob_threshold, float nms_threshold)
+int Yolo::detect(jobject bitmap, std::vector<Object>& objects, bool use_gpu, float prob_threshold, float nms_threshold, int num_class)
 {
     if (use_gpu == JNI_TRUE && ncnn::get_gpu_count() == 0)
         {
@@ -314,7 +313,7 @@ int Yolo::detect(jobject bitmap, std::vector<Object>& objects, bool use_gpu, flo
     std::vector<int> strides = {8, 16, 32}; // might have stride=64
     std::vector<GridAndStride> grid_strides;
     generate_grids_and_stride(in_pad.w, in_pad.h, strides, grid_strides);
-    generate_proposals(grid_strides, out, prob_threshold, proposals);
+    generate_proposals(grid_strides, out, prob_threshold, proposals, num_class);
 
     // sort all proposals by score from highest to lowest
     qsort_descent_inplace(proposals);

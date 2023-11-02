@@ -50,6 +50,7 @@ static jfieldID hId;
 static jfieldID labelId;
 static jfieldID probId;
 static const char* class_names[] = {"shi", "hun", "other"};
+static int num_class = 3;
 static int img_input_size = 416;
 
 JNIEXPORT jint JNI_OnLoad(JavaVM* vm, void* reserved)
@@ -112,7 +113,7 @@ JNIEXPORT jobjectArray JNICALL Java_com_tencent_yolov8ncnn_Yolov8Ncnn_Detect(JNI
     {
        double start_time = ncnn::get_current_time();
        std::vector<Object> objects;
-       g_yolo->detect(bitmap, objects, use_gpu, prob_threshold,nms_threshold);
+       g_yolo->detect(bitmap, objects, use_gpu, prob_threshold,nms_threshold, num_class);
        jobjectArray jObjArray = env->NewObjectArray(objects.size(), objCls, NULL);
 
        for (size_t i=0; i<objects.size(); i++)

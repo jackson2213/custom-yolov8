@@ -38,7 +38,7 @@ public:
 
     int load( AAssetManager* mgr, int target_size, const float* mean_vals, const float* norm_vals);
 
-    int detect(const cv::Mat& rgb, std::vector<Object>& objects, bool use_gpu,float prob_threshold = 0.8f, float nms_threshold = 0.8f);
+    int detect(const cv::Mat& rgb, std::vector<Object>& objects, bool use_gpu,float prob_threshold = 0.8f, float nms_threshold = 0.8f, int num_class=3);
 
 
 private:
