@@ -116,7 +116,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
 
     private void reload()
     {
-        boolean ret_init = yolov8ncnn.loadModel(getAssets(), current_model, current_cpugpu);
+        boolean ret_init = yolov8ncnn.loadModel(getAssets(), current_cpugpu);
         if (!ret_init)
         {
             Log.e("MainActivity", "yolov8ncnn loadModel failed");

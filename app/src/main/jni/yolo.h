@@ -40,7 +40,6 @@ public:
 
     int detect(const cv::Mat& rgb, std::vector<Object>& objects, float prob_threshold = 0.8f, float nms_threshold = 0.8f);
 
-    int draw(cv::Mat& rgb, const std::vector<Object>& objects);
 
 private:
     ncnn::Net yolo;

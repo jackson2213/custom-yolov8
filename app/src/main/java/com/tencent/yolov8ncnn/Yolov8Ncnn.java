@@ -19,10 +19,17 @@ import android.view.Surface;
 
 public class Yolov8Ncnn
 {
-    public native boolean loadModel(AssetManager mgr, int modelid, int cpugpu);
-    public native boolean openCamera(int facing);
-    public native boolean closeCamera();
-    public native boolean setOutputWindow(Surface surface);
+    public class Obj
+    {
+        public float x;
+        public float y;
+        public float w;
+        public float h;
+        public String label;
+        public float prob;
+    }
+    public native boolean loadModel(AssetManager mgr, int cpugpu);
+    public native Obj[] Detect(Bitmap bitmap,float prob_threshold, float nms_threshold);
 
     static {
         System.loadLibrary("yolov8ncnn");
