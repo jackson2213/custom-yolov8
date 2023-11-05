@@ -43,7 +43,9 @@ model.export(format='onnx',simplify=True)
 * implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.12.1'
 
 ### step6
-* 把导出的onnx模型放入assets文件夹下，具体调用可看MainActivity load_model函数
+* 把导出的onnx模型放入assets文件夹下
+* 在SupportOnnx.java中修改自己的模型以及其他参数
+* 具体调用可看MainActivity load_model函数
 
 ## some notes
 * yolo v5 模型 无法运行。 请参阅其他 GitHub 站点。
