@@ -26,8 +26,10 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.PixelFormat;
 import android.media.ExifInterface;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Message;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -38,23 +40,39 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+
+import com.tencent.yolov8ncnn.yolov8.DectectResult;
+import com.tencent.yolov8ncnn.yolov8.OverStatusData;
+import com.tencent.yolov8ncnn.yolov8.Result;
+import com.tencent.yolov8ncnn.yolov8.SupportOnnx;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import ai.onnxruntime.OnnxTensor;
+import ai.onnxruntime.OrtEnvironment;
+import ai.onnxruntime.OrtException;
+import ai.onnxruntime.OrtSession;
 
 public class MainActivity extends Activity
 {
     private static final int SELECT_IMAGE = 1;
-    private float prob_threshold= 0.7F;
-    private float nms_threshold= 0.7F;
     private ImageView imageView;
     private Bitmap bitmap = null;
     private Bitmap yourSelectedImage = null;
+    private SupportOnnx supportOnnx;
+    private OrtEnvironment ortEnvironment;
+    private OrtSession ortSession;
+    private TextView textView,overtv;
 
-    private Yolov8Ncnn yolov8ncnn = new Yolov8Ncnn();
 
     /** Called when the activity is first created. */
     @Override
@@ -62,9 +80,11 @@ public class MainActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        reload();
+        load_model();
 
         imageView = (ImageView) findViewById(R.id.imageView);
+        textView = findViewById(R.id.itv);
+        overtv = findViewById(R.id.overtv);
 
         Button buttonImage = (Button) findViewById(R.id.buttonImage);
         buttonImage.setOnClickListener(new View.OnClickListener() {
@@ -82,36 +102,18 @@ public class MainActivity extends Activity
             public void onClick(View arg0) {
                 if (yourSelectedImage == null)
                     return;
-                Yolov8Ncnn.Obj[] objects = yolov8ncnn.Detect(yourSelectedImage, false,prob_threshold,nms_threshold);
+
+                ArrayList<Result> objects = YoloDectect(yourSelectedImage);
 
                 showObjects(objects);
             }
         });
 
-        Button buttonDetectGPU = (Button) findViewById(R.id.buttonDetectGPU);
-        buttonDetectGPU.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View arg0) {
-                if (yourSelectedImage == null)
-                    return;
 
-                Yolov8Ncnn.Obj[] objects = yolov8ncnn.Detect(yourSelectedImage, true,prob_threshold,nms_threshold);
-
-                showObjects(objects);
-            }
-        });
     }
 
-    private void reload()
-    {
-        boolean ret_init = yolov8ncnn.Init(getAssets());
-        if (!ret_init)
-        {
-            Log.e("MainActivity", "yolov8ncnn loadModel failed");
-        }
-    }
 
-    private void showObjects(Yolov8Ncnn.Obj[] objects)
+    private void showObjects(ArrayList<Result> objects)
     {
         if (objects == null)
         {
@@ -124,10 +126,7 @@ public class MainActivity extends Activity
 
         final int[] colors = new int[] {
                 Color.rgb( 54,  67, 244),
-                Color.rgb( 99,  30, 233),
                 Color.rgb(176,  39, 156),
-                Color.rgb(183,  58, 103),
-                Color.rgb(181,  81,  63),
                 Color.rgb(243, 150,  33),
                 Color.rgb(244, 169,   3),
                 Color.rgb(212, 188,   0),
@@ -159,21 +158,21 @@ public class MainActivity extends Activity
         textpaint.setTextSize(26);
         textpaint.setTextAlign(Paint.Align.LEFT);
 
-        for (int i = 0; i < objects.length; i++)
+        for (int i = 0; i < objects.size(); i++)
         {
-            paint.setColor(colors[i % 19]);
+            paint.setColor(colors[i % 3]);
 
-            canvas.drawRect(objects[i].x, objects[i].y, objects[i].x + objects[i].w, objects[i].y + objects[i].h, paint);
+            canvas.drawRect(objects.get(i).getRectF().left, objects.get(i).getRectF().top, objects.get(i).getRectF().right, objects.get(i).getRectF().bottom, paint);
 
             // draw filled text inside image
             {
-                String text = objects[i].label + " = " + String.format("%.1f", objects[i].prob * 100) + "%";
+                String text = objects.get(i).getLabel() + " = " + String.format("%.1f", objects.get(i).getScore() * 100) + "%";
 
                 float text_width = textpaint.measureText(text);
                 float text_height = - textpaint.ascent() + textpaint.descent();
 
-                float x = objects[i].x;
-                float y = objects[i].y - text_height;
+                float x = objects.get(i).getRectF().left;
+                float y = objects.get(i).getRectF().top - text_height;
                 if (y < 0)
                     y = 0;
                 if (x + text_width > rgba.getWidth())
@@ -222,7 +221,7 @@ public class MainActivity extends Activity
         BitmapFactory.decodeStream(getContentResolver().openInputStream(selectedImage), null, o);
 
         // The new size we want to scale to
-        final int REQUIRED_SIZE = 640;
+        final int REQUIRED_SIZE = 416;
 
         // Find the correct scale value. It should be the power of 2.
         int width_tmp = o.outWidth, height_tmp = o.outHeight;
@@ -277,4 +276,101 @@ public class MainActivity extends Activity
 
 
     }
+    @Override
+    protected void onStop() {
+
+        try {
+            ortSession.endProfiling();
+        } catch (OrtException e) {
+            e.printStackTrace();
+        }
+        super.onStop();
+    }
+    @Override
+    public void onDestroy() {
+
+        try {
+            ortSession.close();
+            ortEnvironment.close();
+        } catch (OrtException e) {
+            e.printStackTrace();
+        }
+        super.onDestroy();
+    }
+
+    public ArrayList<Result> YoloDectect(Bitmap image) {
+        if (image != null) {
+            OverStatusData overStatusData= OverStatusData.getInstance();
+            overStatusData.setCenterx(image.getWidth()/2);
+//            Bitmap bitmap = supportOnnx.imageToBitmap(image);
+            // image -> bitmap
+            long startTime = System.currentTimeMillis();
+            Bitmap bitmap_640 = supportOnnx.letterboxResize(image);
+
+            // bitmap -> float buffer
+            FloatBuffer imgDataFloat = supportOnnx.bitmapToFloatBuffer(bitmap_640);
+
+            //모델명
+            String inputName = ortSession.getInputNames().iterator().next();
+            //모델의 요구 입력값
+            long[] shape = {SupportOnnx.BATCH_SIZE, SupportOnnx.PIXEL_SIZE, SupportOnnx.INPUT_SIZE, SupportOnnx.INPUT_SIZE};
+
+            try {
+                // float buffer -> tensor
+                OnnxTensor inputTensor = OnnxTensor.createTensor(ortEnvironment, imgDataFloat, shape);
+                // 추론
+                OrtSession.Result result = ortSession.run(Collections.singletonMap(inputName, inputTensor));
+                // 결과 (v8 의 출력은 [1][xywh + label 의 개수][8400] 입니다.
+                float[][][] output = (float[][][]) result.get(0).getValue();
+
+                int rows = output[0][0].length; //8400
+                // tensor -> label, score, rectF
+                ArrayList<Result> results = supportOnnx.outputsToNMSPredictions(output, rows);
+                if (results.size()>0){
+                    textView.setText("region: "+results.get(0).getRectF().toString());
+                    textView.setTextColor(Color.BLACK);
+                }
+                System.out.println("yolo detect result: "+results.size());
+                DectectResult dectectResult = supportOnnx.TransformDetectResult(results);
+                if (dectectResult!=null) {
+                    System.out.println("over detect result:"+dectectResult.getOver_status());
+                    String type = dectectResult.getDelivery_catagory();
+                    overtv.setText("over lap: "+dectectResult.getOver_status());
+                }else {
+                    System.out.println("detect result is null, skip it");
+                    overtv.setText("");
+                }
+                overtv.setTextColor(Color.BLACK);
+                long endTime = System.currentTimeMillis();
+
+                // Calculate execution time
+                long executionTime = endTime - startTime;
+                System.out.println("detect Execution time: " + executionTime + " milliseconds");
+                return results;
+
+            } catch (OrtException e) {
+                e.printStackTrace();
+
+            }
+        }
+        return null;
+    }
+
+
+    public void load_model() {
+        //model, label 불러오기
+        supportOnnx = new SupportOnnx(this);
+        supportOnnx.loadModel();
+        supportOnnx.loadLabel();
+        try {
+            //onnxRuntime 활성화
+            ortEnvironment = OrtEnvironment.getEnvironment();
+            ortSession = ortEnvironment.createSession(this.getFilesDir().getAbsolutePath() + "/" + SupportOnnx.fileName,
+                    new OrtSession.SessionOptions());
+        } catch (OrtException e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

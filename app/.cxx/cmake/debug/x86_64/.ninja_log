@@ -7,3 +7,5 @@
 11	745	720630722	CMakeFiles/yolov8ncnn.dir/yolov8ncnn.cpp.o	b58b8ca6cc4cc2f3
 3	865	720630722	CMakeFiles/yolov8ncnn.dir/yolo.cpp.o	2ef271155eafbe74
 865	1191	720630722	E:/download/ncnn-android-yolov8-main/ncnn-android-yolov8/app/build/intermediates/cmake/debug/obj/x86_64/libyolov8ncnn.so	8a1c66b53902a9cb
+0	16	0	clean	3ae3f5da55db15c4
+0	14	0	clean	3ae3f5da55db15c4

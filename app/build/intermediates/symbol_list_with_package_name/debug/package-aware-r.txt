@@ -2,8 +2,9 @@ com.tencent.yolov8ncnn
 array cpugpu_array
 array model_array
 id buttonDetect
-id buttonDetectGPU
 id buttonImage
 id imageView
+id itv
+id overtv
 layout main
 string app_name

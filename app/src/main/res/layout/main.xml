@@ -18,13 +18,22 @@
         android:id="@+id/buttonDetect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="infer-cpu" />
-    <Button
-        android:id="@+id/buttonDetectGPU"
+        android:text="Dectect" />
+
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/itv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="infer-gpu" />
-    </LinearLayout>
+        android:text=""
+        android:textSize="14sp"/>
+    <TextView
+        android:id="@+id/overtv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="14sp"/>
 
     <ImageView
         android:id="@+id/imageView"

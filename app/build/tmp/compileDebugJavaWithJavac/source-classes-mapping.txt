@@ -1,10 +1,14 @@
 com/tencent/yolov8ncnn/BuildConfig.java
  com.tencent.yolov8ncnn.BuildConfig
-com/tencent/yolov8ncnn/Yolov8Ncnn.java
- com.tencent.yolov8ncnn.Yolov8Ncnn
- com.tencent.yolov8ncnn.Yolov8Ncnn$Obj
+com/tencent/yolov8ncnn/yolov8/DectectResult.java
+ com.tencent.yolov8ncnn.yolov8.DectectResult
+com/tencent/yolov8ncnn/yolov8/Result.java
+ com.tencent.yolov8ncnn.yolov8.Result
+com/tencent/yolov8ncnn/yolov8/OverStatusData.java
+ com.tencent.yolov8ncnn.yolov8.OverStatusData
+com/tencent/yolov8ncnn/yolov8/SupportOnnx.java
+ com.tencent.yolov8ncnn.yolov8.SupportOnnx
 com/tencent/yolov8ncnn/MainActivity.java
  com.tencent.yolov8ncnn.MainActivity
  com.tencent.yolov8ncnn.MainActivity$1
  com.tencent.yolov8ncnn.MainActivity$2
- com.tencent.yolov8ncnn.MainActivity$3

@@ -1,47 +1,55 @@
-# ncnn-android-yolov8
+# onnx-android-yolov8
 
-The yolov8 object detection
+最新YOLOV8 ONNX模型导入安卓，无需转换NCCN
 
-This is a sample ncnn android project, it depends on ncnn library and opencv
-
-https://github.com/Tencent/ncnn
-
-https://github.com/nihui/opencv-mobile
 
 
 ## how to build and run
 ### step1
-https://github.com/Tencent/ncnn/releases
-
-* Download ncnn-YYYYMMDD-android-vulkan.zip or build ncnn for android yourself
-* Extract ncnn-YYYYMMDD-android-vulkan.zip into **app/src/main/jni** and change the **ncnn_DIR** path to yours in **app/src/main/jni/CMakeLists.txt**
+打开YOLOV8官方网站: https://github.com/ultralytics/ultralytics
 
 ### step2
-https://github.com/nihui/opencv-mobile
+使用pip安装最新YOLOV8
+```
+pip install ultralytics
+```
 
-* Download opencv-mobile-XYZ-android.zip
-* Extract opencv-mobile-XYZ-android.zip into **app/src/main/jni** and change the **OpenCV_DIR** path to yours in **app/src/main/jni/CMakeLists.txt**
 
 ### step3
-* Open this project with Android Studio, build it and enjoy!
+* 训练自己的模型,可参考YOLOV8官方
+```
+from ultralytics import YOLO
+from multiprocessing import freeze_support
+
+# Load a model
+model = YOLO("yolov8n.yaml")  # build a new model from scratch
+model = YOLO("yolov8n.pt")  # load a pretrained model (recommended for training)
+
+if __name__ == '__main__':
+freeze_support()  # for Windows support
+
+    model.train(data="fire.yaml", epochs=100)  # train the model
+```
+### step4
+* 导出自己的模型,可参考官方
+```
+from ultralytics import YOLO
+model = YOLO('best.pt')  # load a custom trained model
+# Export the model
+model.export(format='onnx',simplify=True)
+``` 
+### step5
+* 在安卓项目中添加runtime包
+* implementation 'com.microsoft.onnxruntime:onnxruntime-android:1.12.1'
+
+### step6
+* 把导出的onnx模型放入assets文件夹下，具体调用可看MainActivity load_model函数
 
 ## some notes
-* Android ndk camera is used for best efficiency
-* Crash may happen on very old devices for lacking HAL3 camera interface
-* All models are manually modified to accept dynamic input shape
-* Most small models run slower on GPU than on CPU, this is common
-* FPS may be lower in dark environment because of longer camera exposure time
+* yolo v5 模型 无法运行。 请参阅其他 GitHub 站点。
 
-## screenshot
-![](screenshot.png)
 
 ## Reference：  
-https://github.com/nihui/ncnn-android-nanodet  
-https://github.com/Tencent/ncnn  
-https://github.com/ultralytics/assets/releases/tag/v0.0.0
+https://github.com/Aloe-droid/Yolov8_Android
 
-##
-https://github.com/lamegaton/YOLOv8-Custom-Object-Detection-Android/tree/main
-https://medium.com/@gary.tsai.advantest/top-tutorials-for-deploying-custom-yolov8-on-android-%EF%B8%8F-dd6746afc1e6
-https://blog.csdn.net/LHYlhy0825/article/details/123060624
 
